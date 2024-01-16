@@ -1,21 +1,23 @@
 CLASS zcl_agdemo_class1 DEFINITION
-  PUBLIC FINAL
+  PUBLIC
+  INHERITING FROM zcl_agdemo_base_class1 FINAL
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    INTERFACES zif_agdemo_intf1.
-
     METHODS constructor.
 
+    METHODS zif_agdemo_intf1~next REDEFINITION.
+
+  PROTECTED SECTION.
+    METHODS config_stuff REDEFINITION.
+
   PRIVATE SECTION.
-    METHODS config_stuff.
-    METHODS deprecated_method.
 ENDCLASS.
 
 
 CLASS zcl_agdemo_class1 IMPLEMENTATION.
   METHOD constructor.
-    WRITE / 'Constructor'.
+    super->constructor( ).
   ENDMETHOD.
 
   METHOD zif_agdemo_intf1~next.
@@ -41,20 +43,6 @@ CLASS zcl_agdemo_class1 IMPLEMENTATION.
 
     dyn_where_cond =
         `INNER JOIN tdevc AS pack ` &&
-        `ON obj~DevelopmentPackage = pack~devclass ` &&
-        `INNER JOIN df14l AS appl ` &&
-        `ON pack~component = appl~fctr_id `.
-  ENDMETHOD.
-
-  METHOD deprecated_method.
-    DATA fugr TYPE rs38l_area.
-
-    CALL FUNCTION 'RS_PROGNAME_SPLIT'
-      EXPORTING  progname_with_namespace = 'LZDBBR'
-      IMPORTING  fugr_group              = fugr
-      EXCEPTIONS delimiter_error         = 1
-                 OTHERS                  = 2.
-    IF sy-subrc <> 0.
-    ENDIF.
+        `ON obj~DevelopmentPackage = pack~devclass `.
   ENDMETHOD.
 ENDCLASS.
